@@ -1,0 +1,7 @@
+Case file fragment - ShadowTrace attribution lead
+---------------------------------------------------
+Handle observed in intercepted infrastructure logs: n0mad_dev
+Known interest: cybersecurity / scripting side-projects.
+One partial reference recovered: "...a programming competition in 2024..."
+
+Trace this alias across whatever public footprint it has left behind.
