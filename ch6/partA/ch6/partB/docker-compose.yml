@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  ch6-partb:
+    build:
+      context: .
+      args:
+        PLAYER_PASSWORD: "${CH6_PLAYER_PASSWORD:?set CH6_PLAYER_PASSWORD to the CH6 Part A recovered credential}"
+        FLAG_VALUE: "${CH6_FLAG:-SBB{sudo_wildcard_is_not_a_sandbox}}"
+    container_name: ch6-partb
+    restart: unless-stopped
+    ports:
+      - "2222:22"          # host 2222 -> container 22 (per Table 15; kept off mgmt port 22)
+    networks:
+      ch6-net:
+        ipv4_address: 10.30.6.10
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID       # required for `sudo` itself to function
+      - SETGID
+      - CHOWN
+    # NOTE: no-new-privileges must stay OFF for this one container, because it
+    # would silently break the intended sudo escalation path. Compensating
+    # controls: internal-only bridge network, no outbound internet, dropped
+    # capabilities otherwise, disposable/rebuildable from golden image.
+    security_opt:
+      - "no-new-privileges:false"
+
+networks:
+  ch6-net:
+    driver: bridge
+    internal: true      # no outbound internet access (Section 16)
+    ipam:
+      config:
+        - subnet: 10.30.6.0/24
