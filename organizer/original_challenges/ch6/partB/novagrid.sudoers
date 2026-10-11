@@ -1,0 +1,5 @@
+# Intentional misconfiguration for CH6 Part B (Section 10.6):
+# "player" can run this one script as root with NO password AND no argument
+# restriction, allowing arbitrary command execution as root through the
+# script's unsanitised parameter.
+player ALL=(root) NOPASSWD: /opt/novagrid/logrotate_check.sh *

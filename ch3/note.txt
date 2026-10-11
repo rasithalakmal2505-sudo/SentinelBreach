@@ -1,0 +1,7 @@
+Recovered alongside the ciphertext - handwritten, partially smudged:
+
+"...sent it right before I left. Sometime during my last shift, within about a
+20-minute window starting around 09:30 UTC on the 14th. Didn't think a
+timestamp made a good password, but it was quick..."
+
+File: message.enc  (first 16 bytes are the IV, AES-128-CBC afterward)

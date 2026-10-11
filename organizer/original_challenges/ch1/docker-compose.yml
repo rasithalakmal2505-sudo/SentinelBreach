@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  ch1-web:
+    build: ./web
+    container_name: ch1-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"          # host 8080 -> container 80 (per Table 15)
+    networks:
+      ch1-net:
+        ipv4_address: 10.30.1.10
+    depends_on:
+      - ch1-db
+    environment:
+      - DB_HOST=ch1-db
+      - DB_NAME=novagrid_portal
+      - DB_USER=portal_app
+      - DB_PASS=change_me_app_pw     # dev-only; move to secret/.env for deployment
+
+  ch1-db:
+    image: mysql:8.0
+    container_name: ch1-db
+    restart: unless-stopped
+    networks:
+      ch1-net:
+        ipv4_address: 10.30.1.11
+    environment:
+      - MYSQL_ROOT_PASSWORD=change_me_root_pw
+      - MYSQL_DATABASE=novagrid_portal
+      - MYSQL_USER=portal_app
+      - MYSQL_PASSWORD=change_me_app_pw
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    # No published ports - DB is only reachable inside ch1-net (icc allowed within
+    # this single stage's network only; this network has no route to any other
+    # challenge segment, per Section 14/16 of the report).
+
+networks:
+  ch1-net:
+    driver: bridge
+    internal: false   # web container still needs the host port mapping;
+                       # outbound internet is blocked at the image/firewall level (see README)
+    ipam:
+      config:
+        - subnet: 10.30.1.0/24

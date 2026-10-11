@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin_console_2019/
+Disallow: /cgi-bin/
+Sitemap: /sitemap.xml
